@@ -33,3 +33,15 @@ ip_ranges:
   - '10.30.20.0/24'
   - '10.30.30.0/24'
 ```
+
+Setup
+=====
+pyyaml is required for procesing the config.yaml file.
+
+On Oracle Linux:
+```
+sudo dnf install -y python3-pip && pip3 install pyyaml
+```
+
+
+
