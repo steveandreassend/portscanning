@@ -8,10 +8,12 @@ python tcp_scanner.py --threads 20 --timeout 1 --config config.yaml --logfile cu
 ```
 
 Where
+```
 --threads is the number of concrrent tcp threads
 --timeout is the amount of seconds to wait on receiving a response
 --config specifies the input for the scan
 --logfile specifies where to write the output of the scan
+```
 
 Sample input for config.yaml:
 
