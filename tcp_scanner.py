@@ -87,9 +87,18 @@ def main():
     ip_ranges = config['ip_ranges']
     ips = generate_ips(ip_ranges)
 
-    # Debug: Print the IPs to be scanned
-    print(f"IPs to scan: {ips}")
-    logging.debug(f"IPs to scan: {ips}")
+    # Report IP ranges to scan
+    for ip_range in ip_ranges:
+        if '/' in ip_range:
+            network = ipaddress.ip_network(ip_range, strict=False)
+            first_ip = str(network.network_address + 1)
+            last_ip = str(network.broadcast_address - 1)
+            total_ips = network.num_addresses - 2
+            print(f"Scanning range {ip_range}: {first_ip} to {last_ip}, total {total_ips} IPs")
+            logging.info(f"Scanning range {ip_range}: {first_ip} to {last_ip}, total {total_ips} IPs")
+        else:
+            print(f"Scanning IP {ip_range}")
+            logging.info(f"Scanning IP {ip_range}")
 
     with ThreadPoolExecutor(max_workers=args.threads) as executor:
         futures = {executor.submit(scan_ip, ip[0], tcp_ports, args.timeout): ip for ip in ips}
@@ -100,9 +109,9 @@ def main():
                 current_range = ip_range
                 if '/' in current_range:
                     network = ipaddress.ip_network(current_range, strict=False)
-                    first_ip = str(network[0])
-                    last_ip = str(network[-1])
-                    total_ips = network.num_addresses - 2  # Excluding network and broadcast addresses
+                    first_ip = str(network.network_address + 1)
+                    last_ip = str(network.broadcast_address - 1)
+                    total_ips = network.num_addresses - 2
                 else:
                     first_ip = last_ip = current_range
                     total_ips = 1
